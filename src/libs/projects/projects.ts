@@ -22,4 +22,22 @@ export const createProject = async (project: IProject) => {
 
 export const getProjects = async() => {
     return memoryProjects;
-}
+};
+
+
+
+export const updateProject = ( id:string, project:Partial<IProject>) => { //partial hace que todos los atributos sean opcionales
+
+    const index = memoryProjects.findIndex(p => p._id === id);
+    if (index === -1) throw new Error('Project not found');
+
+    memoryProjects[index] = { ...memoryProjects[index], ...project, updatedAt: new Date() };
+    return memoryProjects[index];
+  }
+  
+  export const deleteProject = (id:string) => {
+    const index = memoryProjects.findIndex(p => p._id === id);
+    if (index === -1) throw new Error('Project not found');
+    memoryProjects.splice(index, 1);
+    return true;
+  }

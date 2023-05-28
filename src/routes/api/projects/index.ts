@@ -1,6 +1,6 @@
 import express from 'express';
 const router = express.Router();
-import { createProject, getProjects } from '@libs/projects/projects';
+import { createProject, getProjects, updateProject, deleteProject } from '@libs/projects/projects';
 
 router.get('/', (_req, res)=> {
     res.json({version:1, scope: 'projects'});
@@ -31,5 +31,17 @@ router.post('/new',async (req,res) => {
     res.json(newProject);
 });
 
+router.put('/upd/:id',async (req, res) => {
+    const {id= ''} = req.params;
+    const {name='', description = '', isActive=false}= req.body;
+    const updatedProject =await updateProject(id, {name, description, isActive: (isActive&& true)});
+    return res.json(updatedProject);
+});
+
+router.delete('/del/:id',async (req, res) => {
+    const {id=''} = req.params;
+    const deletedProject = await deleteProject(id);
+    return res.json({deleted: deletedProject, id})
+});
 
 export default router;
