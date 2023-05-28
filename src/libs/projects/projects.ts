@@ -22,5 +22,4 @@ export const createProject = async (project: IProject) => {
 
 export const getProjects = async() => {
     return memoryProjects;
-    
 }

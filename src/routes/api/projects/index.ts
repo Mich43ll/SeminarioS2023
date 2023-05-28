@@ -1,9 +1,12 @@
 import express from 'express';
 const router = express.Router();
+import { createProject, getProjects } from '@libs/projects/projects';
 
 router.get('/', (_req, res)=> {
     res.json({version:1, scope: 'projects'});
 });
+
+
 
 router.get('/echo/:msg', (req, res) =>{
     const{msg}= req.params;
@@ -15,5 +18,18 @@ router.post('/echo2', (req, res) =>{
     const{variable1= 'hola', variable2 ='mundo'} = req.body;
     res.json({variable1, variable2});
 });
+
+router.get('/all', async (_req,res) => {
+    const projects = await getProjects();
+    res.json(projects);
+});
+
+router.post('/new',async (req,res) => {
+    const{name='', description= '', isActive = false}=req.body;
+    const newProject = {name, description, isActive: (isActive&& true)};
+    const createdProject = await createProject(newProject);
+    res.json(newProject);
+});
+
 
 export default router;
