@@ -20,7 +20,7 @@ export const createProject = async (project: IProject) => {
     return newProject;
 }
 
-export const getProjects = async{} => {
+export const getProjects = async() => {
     return memoryProjects;
     
 }
