@@ -30,8 +30,8 @@ router.get('/byid/:id',async (req,res) => {
 
 router.post('/new', async (req, res) => {
   try {
-    const { name = '', description = '', isActive = false } = req.body;
-    const newTeam = { name, description, isActive: isActive && true };
+    const { name = '', description = '', members = [], owner ='', status = 'Active'} = req.body;
+    const newTeam = { name, description,members,owner, status};
     const createdTeam = await createTeam(newTeam);
     return res.json(createdTeam);
   } catch (ex: any) {
@@ -42,11 +42,13 @@ router.post('/new', async (req, res) => {
 router.put('/upd/:id', async (req, res) => {
   try {
     const { id = '' } = req.params;
-    const { name = '', description = '', isActive = false } = req.body;
+    const { name = '', description = '', members = [], owner ='', status = 'Active' } = req.body;
     const updatedTeam = await updateTeam(id, {
       name,
       description,
-      isActive: isActive && true,
+      members, 
+      owner, 
+      status
     });
     return res.json(updatedTeam);
   } catch (ex: any) {

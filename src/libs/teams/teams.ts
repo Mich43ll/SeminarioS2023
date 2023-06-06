@@ -1,47 +1,33 @@
-export interface ITeams{
-    _id?: string;
+
+import { TeamDao } from "@server/dao/models/TeamsDao";
+export interface ITeam{
+    id?: string;
     name: string;
     description: string;
-    isActive: boolean;
+    members?: string[];
+    owner?: string;
+    status?: string;
     createdAt?: Date;
     updatedAt?: Date;
 }
+const TeamDaoInstance = new TeamDao();
 
-//const newPrject: Required<ITeams>={}; hace que cada uno de los campos de ITeams sean requeridos
-const memoryTeams: ITeams[] = [];
-let createdTeams = 0;
-
-export const createTeam = async (team: ITeams) => {
-    const newTeam = {...team};
-    newTeam._id = (++createdTeams).toString();
-    newTeam.createdAt = new Date();
-    newTeam.updatedAt = newTeam.createdAt;
-    memoryTeams.push(newTeam);
-    return newTeam;
+export const createTeam = async (team: ITeam) => {
+    return TeamDaoInstance.create(team);
 }
 
 export const getTeams = async() => {
-    return memoryTeams;
+    return TeamDaoInstance.find({});
 };
 
 export const getTeam =async (id:string) => {
-    const team = memoryTeams.find(p=>p._id === id);
-    if(!team) throw new Error('Team not found');
-    return team;
+    return TeamDaoInstance.findOne(id)
 }
 
-export const updateTeam = ( id:string, team:Partial<ITeams>) => { //partial hace que todos los atributos sean opcionales
-
-    const index = memoryTeams.findIndex(p => p._id === id);
-    if (index === -1) throw new Error('Team not found');
-
-    memoryTeams[index] = { ...memoryTeams[index], ...team, updatedAt: new Date() };
-    return memoryTeams[index];
+export const updateTeam = ( id:string, team:Partial<ITeam>) => { //partial hace que todos los atributos sean opcionales
+    return TeamDaoInstance.update(id, team);
   }
   
   export const deleteTeam = (id:string) => {
-    const index = memoryTeams.findIndex(p => p._id === id);
-    if (index === -1) throw new Error('Team not found');
-    memoryTeams.splice(index, 1);
-    return true;
+    return TeamDaoInstance.delete(id)
   }
